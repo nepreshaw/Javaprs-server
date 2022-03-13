@@ -26,5 +26,36 @@ public class VendorController {
 		}
 		return new ResponseEntity<Vendor>(vendor.get(), HttpStatus.FOUND);
 	}
-
+	
+	@PostMapping
+	public ResponseEntity<Vendor> postVendor(@RequestBody Vendor vendor){
+		if(vendor == null || vendor.getId() != 0) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		vendRepo.save(vendor);
+		return new ResponseEntity<Vendor>(vendor, HttpStatus.CREATED);
+	}
+	
+	@PutMapping("{id}")
+	public ResponseEntity<Vendor> putVendor(@PathVariable int id, @RequestBody Vendor vendor){
+		if(vendor == null || vendor.getId() == 0) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		var vend = vendRepo.findById(id);
+		if(vend.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		vendRepo.save(vendor);
+		return new ResponseEntity<Vendor>(vendor, HttpStatus.NO_CONTENT);
+	}
+	@SuppressWarnings("rawtypes")
+	@DeleteMapping("{id}")
+	public ResponseEntity deleteVendor(@PathVariable int id){
+		var vendor = vendRepo.findById(id);
+		if(vendor.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		vendRepo.delete(vendor.get());
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
 }
