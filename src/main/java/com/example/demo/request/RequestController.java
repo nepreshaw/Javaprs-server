@@ -12,6 +12,20 @@ public class RequestController {
 	@Autowired
 	private RequestRepository reqRepo;
 	
+	//turn this into a ternery statement
+	
+	
+	@PutMapping("/review")
+	public ResponseEntity<Request> putReview(@RequestBody Request request){
+		if(request.getTotal() <= 50) {
+			request.setStatus("APPROVED");
+		} else {
+			request.setStatus("REVIEW");
+		}
+		reqRepo.save(request);
+		return new ResponseEntity<Request>(request, HttpStatus.NO_CONTENT);
+	}
+	
 	@GetMapping
 	public ResponseEntity<Iterable<Request>> getRequests(){
 		var reqs = reqRepo.findAll();
@@ -37,8 +51,26 @@ public class RequestController {
 	}
 	
 	@PutMapping("{id}")
-	public ResponsEntity
+	public ResponseEntity<Request> putRequest(@PathVariable int id, @RequestBody Request request){
+		if(request == null || request.getId() == 0) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		var req = reqRepo.findById(id);
+		if(req.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		reqRepo.save(request);
+		return new ResponseEntity<Request>(request, HttpStatus.NO_CONTENT);
+	}
 	
-	
-
+	@SuppressWarnings("rawtypes")
+	@DeleteMapping("{id}")
+	public ResponseEntity deleteRequest(@PathVariable int id) {
+		var req = reqRepo.findById(id);
+		if(req.isEmpty()) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		reqRepo.delete(req.get());
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
 }
