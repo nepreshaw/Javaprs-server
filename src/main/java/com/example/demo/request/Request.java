@@ -1,8 +1,12 @@
 package com.example.demo.request;
 
+import java.util.List;
+
 import javax.persistence.*;
 
+import com.example.demo.RequestLine.RequestLine;
 import com.example.demo.user.User;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Request {
@@ -26,6 +30,18 @@ public class Request {
 	@JoinColumn(name="userId")
 	private User user;
 	
+	  @JsonManagedReference
+	  @OneToMany(mappedBy="request")
+	  private List<RequestLine> requestlines;
+	
+	public List<RequestLine> getRequestlines() {
+		return requestlines;
+	}
+
+	public void setRequestlines(List<RequestLine> requestlines) {
+		this.requestlines = requestlines;
+	}
+
 	public int getId() {
 		return id;
 	}

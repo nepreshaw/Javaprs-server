@@ -20,7 +20,7 @@ public class UserController {
 			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
 		}
 		
-		return new ResponseEntity<>(HttpStatus.FOUND);
+		return new ResponseEntity<User>(user.get(), HttpStatus.FOUND);
 	}
 	
 	@GetMapping

@@ -1,8 +1,12 @@
 package com.example.demo.product;
 
+import java.util.List;
+
 import javax.persistence.*;
 
+import com.example.demo.RequestLine.RequestLine;
 import com.example.demo.vendor.Vendor;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(uniqueConstraints=@UniqueConstraint(name="UIDX_partNbr", columnNames= {"partNbr"}))
@@ -26,6 +30,7 @@ public class Product {
 	@ManyToOne(optional=false)
 	@JoinColumn(name="vendorId")
 	private Vendor vendor;
+	
 	
 	public int getId() {
 		return id;

@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @CrossOrigin
 @RestController
 @RequestMapping("/api/request")
@@ -12,9 +13,29 @@ public class RequestController {
 	@Autowired
 	private RequestRepository reqRepo;
 	
-	//turn this into a ternery statement
 	
+	@GetMapping("review/{userId}")
+	public ResponseEntity<Iterable<Request>> getReviews(@PathVariable int userId){
+		Iterable<Request> req = reqRepo.findByStatusAndUserIdNot("REVIEW", userId);
+		
+		return new ResponseEntity<Iterable<Request>>(req, HttpStatus.FOUND);
+	}
 	
+	@SuppressWarnings("rawtypes")
+	@PutMapping("approve/{id}")
+	public ResponseEntity approveRequest(@PathVariable int id, @RequestBody Request request) {
+		request.setStatus("APPROVED");
+		return putRequest(id, request);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@PutMapping("reject/{id}")
+	public ResponseEntity rejectReject(@PathVariable int id, @RequestBody Request request) {
+		request.setStatus("REJECTED");
+		return putRequest(id, request);
+	}
+	
+	//turn this into a ternary statement
 	@PutMapping("/review")
 	public ResponseEntity<Request> putReview(@RequestBody Request request){
 		if(request.getTotal() <= 50) {
